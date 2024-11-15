@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Call, CallType, Chat, Message, SidebarState, Update, UpdateStatus } from '../type';
+import { Call, CallType, Chat, Message, SidebarState, Update, UpdateStatus ,Status} from '../type';
 import { Sidebar } from './Sidebar/SearchBar';
 import { ChatArea } from './Chat/ChatArea';
 import { Menu, X } from 'lucide-react';
@@ -7,11 +7,20 @@ import { Navbar } from './Navigation/Navbar';
 import Tools from './Navigation/tools';
 import Updates from './Navigation/Update';
 import Calls from './Navigation/Call';
+import StatusSection from './button/Status';
+import OpenStatus from './button/OpenStatus';
 
 const ChatApp: React.FC = () => {
   const [selectedChat, setSelectedChat] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState<SidebarState['isSidebarOpen']>(true);
   const [activeTab, setActiveTab] = useState<string>('Chats');
+  const [openStatus, setOpenStatus] = useState<Status | null>(null);
+  const handleCloseStatus = () => {
+    setOpenStatus(null);
+  };
+  const handleOpenStatus = (status: Status) => {
+    setOpenStatus(status);
+  };
 
   const chats: Chat[] = [
     { id: 1, name: 'John Doe', lastMessage: 'Hey, how are you?', time: '10:30 AM', unread: 2 },
@@ -39,6 +48,10 @@ const ChatApp: React.FC = () => {
     { id: 2, name: 'Jane Smith', type: CallType.OUTGOING, duration: '4:30' },
     // Add more call data
   ]);
+  const statuses: Status[] = [
+    { id: 1, message: "Hello everyone!", timestamp: "Today at 9:30 AM" },
+    { id: 2, message: "Feeling great today.", timestamp: "Yesterday at 5:45 PM" }
+  ];
   const [activeCall, setActiveCall] = useState<Call | null>(null);
 
   const handleStartCall = (call: Call) => {
@@ -73,7 +86,7 @@ const ChatApp: React.FC = () => {
       case 'Calls':
         return <Calls calls={calls} activeCall={activeCall} onStartCall={handleStartCall} />;
       case 'Updates':
-        return <Updates updates={updates} onViewUpdate={handleViewUpdate} />;
+        return <StatusSection statuses={statuses} />;
       case 'Tools':
         return <Tools />;
       default:
@@ -124,6 +137,7 @@ const ChatApp: React.FC = () => {
           // onClick={() => setIsSidebarOpen(false)}
         />
       )}
+      {openStatus && <OpenStatus {...openStatus} onClose={handleCloseStatus} />}
     </div>
   );
 };

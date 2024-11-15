@@ -60,3 +60,21 @@ export enum CallType {
     // Any props that are common across multiple components in the Navigation folder
   }
   
+  export interface Status {
+    id: number;
+    message: string;
+    timestamp: string;
+  }
+  
+  export interface StatusSectionProps {
+    statuses: Status[];
+  }
+  export interface IndividualStatusProps extends Status {
+    onClick: (status: Status) => void;
+  }
+  export interface OpenStatusProps extends Status {
+    id: number;
+  message: string;
+  timestamp: string;
+  onClose: () => void;
+  }
